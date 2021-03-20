@@ -40,7 +40,8 @@ function newBeat(beatNum, timing, buttonkeys, beatLength)
 		beatLength = beatLength,
 		ZactiveNow = false,
 		XactiveNow = false,
-		CactiveNow = false
+		CactiveNow = false,
+		prevHit = false
 	}
 end
 
@@ -140,6 +141,7 @@ function levelface.enter()
 	score = 0
 	songBeatsAll = json.decode(love.filesystem.read(songBeats))
 	levelsong = love.audio.newSource(songlevel, "stream")
+	hitsound = love.audio.newSource("aud/hit.wav", "static")
 	love.audio.play(levelsong)
 	songBeats = json.decode(love.filesystem.read(songBeats))
 	upcomingBeats = {}
@@ -158,11 +160,6 @@ function levelface.update()
 	if songPosition > songOffset + beatTimer + (songCrochet / 8) then 
 		beatTimer = beatTimer + (songCrochet / 8)
 		lastBeat = lastBeat + 0.125
-	end
-	for i, beat in ipairs(upcomingBeats) do
-		if lastBeat == beat.timing then
-			print("Hit " .. beat.buttonkeys .. "!")
-		end
 	end
 end
 
@@ -187,7 +184,7 @@ function levelface.draw()
 		if beat.buttonkeys == "z" then
 			xcoord = 75 + ((beat.timing - lastBeat) * 325)
 			love.graphics.draw(zbeatimg, xcoord, 400, 0, 0.5)
-			if checkCollision(xcoord, 400, 100, 100, 75, 400, 200, 200) == true then
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 100, 100) == true then
 				beat.ZactiveNow = true
 				print("Z now!")
 			else
@@ -197,7 +194,7 @@ function levelface.draw()
 		elseif beat.buttonkeys == "x" then
 			xcoord = 75 + ((beat.timing - lastBeat) * 325)
 			love.graphics.draw(xbeatimg, xcoord, 400, 0, 0.5)
-			if checkCollision(xcoord, 400, 100, 100, 75, 400, 150, 150) == true then
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 100, 100) == true then
 				beat.XactiveNow = true
 				print("X now!")
 			else
@@ -207,7 +204,7 @@ function levelface.draw()
 		elseif beat.buttonkeys == "c" then
 			xcoord = 75 + ((beat.timing - lastBeat) * 325)
 			love.graphics.draw(cbeatimg, xcoord, 400, 0, 0.5)
-			if checkCollision(xcoord, 400, 100, 100, 75, 400, 150, 150) == true then
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 100, 100) == true then
 				beat.CactiveNow = true
 				print("C now!")
 			else
@@ -227,17 +224,23 @@ end
 
 function levelface:keypressed(key)
 	for i, beat in ipairs(upcomingBeats) do
-		if beat.ZactiveNow == true and key == "z" then
+		if beat.ZactiveNow == true and key == "z" and beat.prevHit == false then
 			score = score + 1
 			print("Successfully hit Z!")
+			love.audio.play(hitsound)
+			beat.prevHit = true
 		end
-		if beat.XactiveNow == true and key == "x" then
+		if beat.XactiveNow == true and key == "x" and beat.prevHit == false then
 			score = score + 1
 			print("Successfully hit X!")
+			love.audio.play(hitsound)
+			beat.prevHit = true
 		end
-		if beat.CactiveNow == true and key == "c" then
+		if beat.CactiveNow == true and key == "c" and beat.prevHit == false then
 			score = score + 1
 			print("Successfully hit C!")
+			love.audio.play(hitsound)
+			beat.prevHit = true
 		end
 	end
 end

@@ -2,16 +2,71 @@
 	{"1": {
 		"timing": 1,
 		"buttons": "z",
-		"beatLength": 1
+		"beatLength": 0.5
 	},
 	"2": {
 		"timing": 1.5,
-		"buttons": "x",
+		"buttons": "z",
 		"beatLength": 0.5
 	},
 	"3": {
-		"timing": 1.75,
-		"buttons": "c",
+		"timing": 3,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"4": {
+		"timing": 3.5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"5": {
+		"timing": 4,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"6": {
+		"timing": 4.5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"7": {
+		"timing": 5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"8": {
+		"timing": 5.5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"9": {
+		"timing": 7,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"10": {
+		"timing": 7.5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"11": {
+		"timing": 8,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"12": {
+		"timing": 8.5,
+		"buttons": "z",
+		"beatLength": 0.5
+	},
+	"13": {
+		"timing": 9,
+		"buttons": "x",
+		"beatLength": 0.5
+	},
+	"14": {
+		"timing": 9.5,
+		"buttons": "x",
 		"beatLength": 0.5
 	}}
 ]
