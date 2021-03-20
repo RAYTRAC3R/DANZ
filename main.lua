@@ -37,8 +37,18 @@ function newBeat(beatNum, timing, buttonkeys, beatLength)
 		beatNum = beatNum,
 		timing = timing,
 		buttonkeys = buttonkeys,
-		beatLength = beatLength
+		beatLength = beatLength,
+		ZactiveNow = false,
+		XactiveNow = false,
+		CactiveNow = false
 	}
+end
+
+function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
 end
 
 
@@ -127,6 +137,7 @@ function levelface.enter()
 	songCrochet = 60 / songBPM
 	beatTimer = 0
 	lastBeat = 0
+	score = 0
 	songBeatsAll = json.decode(love.filesystem.read(songBeats))
 	levelsong = love.audio.newSource(songlevel, "stream")
 	love.audio.play(levelsong)
@@ -137,6 +148,9 @@ function levelface.enter()
 			table.insert(upcomingBeats, newBeat(l, k[tostring(l)]["timing"], k[tostring(l)]["buttons"], k[tostring(l)]["beatLength"]))
 		end
 	end
+	zbeatimg = love.graphics.newImage("imgs/zbeat.png")
+	xbeatimg = love.graphics.newImage("imgs/xbeat.png")
+	cbeatimg = love.graphics.newImage("imgs/cbeat.png")
 end
 
 function levelface.update()
@@ -145,11 +159,9 @@ function levelface.update()
 		beatTimer = beatTimer + (songCrochet / 8)
 		lastBeat = lastBeat + 0.125
 	end
-	for i, k in ipairs(songBeats) do
-		for l in pairs(k) do
-			if lastBeat == k[tostring(l)]["timing"] then
-				print("Hit " .. k[tostring(l)]["buttons"] .. "!")
-			end
+	for i, beat in ipairs(upcomingBeats) do
+		if lastBeat == beat.timing then
+			print("Hit " .. beat.buttonkeys .. "!")
 		end
 	end
 end
@@ -160,7 +172,7 @@ function levelface.draw()
 	local tracker = {50, 400, 75, 550, 750, 550, 750, 400}
 	love.graphics.polygon('line', tracker)
 	love.graphics.print(
-			songPosition,
+			score,
 			font,
 			10,
 			10
@@ -171,14 +183,62 @@ function levelface.draw()
 			412,
 			475
 			)
+	for i, beat in ipairs(upcomingBeats) do
+		if beat.buttonkeys == "z" then
+			xcoord = 75 + ((beat.timing - lastBeat) * 325)
+			love.graphics.draw(zbeatimg, xcoord, 400, 0, 0.5)
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 200, 200) == true then
+				beat.ZactiveNow = true
+				print("Z now!")
+			else
+				beat.ZactiveNow = false
+				print("No Z now.")
+			end
+		elseif beat.buttonkeys == "x" then
+			xcoord = 75 + ((beat.timing - lastBeat) * 325)
+			love.graphics.draw(xbeatimg, xcoord, 400, 0, 0.5)
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 150, 150) == true then
+				beat.XactiveNow = true
+				print("X now!")
+			else
+				beat.XactiveNow = false
+				print("No X now.")
+			end
+		elseif beat.buttonkeys == "c" then
+			xcoord = 75 + ((beat.timing - lastBeat) * 325)
+			love.graphics.draw(cbeatimg, xcoord, 400, 0, 0.5)
+			if checkCollision(xcoord, 400, 100, 100, 75, 400, 150, 150) == true then
+				beat.CactiveNow = true
+				print("C now!")
+			else
+				beat.CactiveNow = false
+				print("No C now.")
+			end
+		end
+	end
 end
 
 function levelface:keyreleased(key)
 	if key == 'escape' then
 		love.audio.stop()
 		Gamestate.switch(danzsongs)
-	elseif key == 'a' then
-		print("A was pressed!")
+	end
+end
+
+function levelface:keypressed(key)
+	for i, beat in ipairs(upcomingBeats) do
+		if beat.ZactiveNow == true and key == "z" then
+			score = score + 1
+			print("Successfully hit Z!")
+		end
+		if beat.XactiveNow == true and key == "x" then
+			score = score + 1
+			print("Successfully hit X!")
+		end
+		if beat.CactiveNow == true and key == "c" then
+			score = score + 1
+			print("Successfully hit C!")
+		end
 	end
 end
 
