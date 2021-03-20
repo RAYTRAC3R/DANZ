@@ -18,16 +18,26 @@ function newButton(text, fn)
 	}
 end
 
-function newLevelButton(text, songlevel, songBPM, songOffset, fn)
+function newLevelButton(text, songlevel, songBPM, songOffset, songBeats, fn)
 	return {
 		text = text,
 		songlevel = songlevel,
 		songBPM = songBPM,
 		songOffset = songOffset,
+		songBeats = songBeats,
 		fn = fn,
 		
 		now = false,
 		last = false
+	}
+end
+
+function newBeat(beatNum, timing, buttonkeys, beatLength)
+	return {
+		beatNum = beatNum,
+		timing = timing,
+		buttonkeys = buttonkeys,
+		beatLength = beatLength
 	}
 end
 
@@ -89,19 +99,18 @@ function danzsongs.enter()
 			songlevel = l["songWav"]
 			songBPM = l["songBPM"]
 			songOffset = l["songOffset"]
+			songBeats = l["beatmap"]
 			table.insert(buttons, newLevelButton(
 				buttonTitle,
 				songlevel,
 				songBPM,
 				songOffset,
+				songBeats,
 				function()
 					print("Starting game")
 					love.audio.stop()
 					Gamestate.switch(levelface)
-					songlevel = songlevel
-					songBPM = songBPM
 					songCrochet = 60 / songBPM
-					songOffset = songOffset
 				end))
 		end
 	end
@@ -115,8 +124,34 @@ function danzsongs.enter()
 end
 
 function levelface.enter()
+	songCrochet = 60 / songBPM
+	beatTimer = 0
+	lastBeat = 0
+	songBeatsAll = json.decode(love.filesystem.read(songBeats))
 	levelsong = love.audio.newSource(songlevel, "stream")
 	love.audio.play(levelsong)
+	songBeats = json.decode(love.filesystem.read(songBeats))
+	upcomingBeats = {}
+	for i, k in ipairs(songBeats) do
+		for l in pairs(k) do
+			table.insert(upcomingBeats, newBeat(l, k[tostring(l)]["timing"], k[tostring(l)]["buttons"], k[tostring(l)]["beatLength"]))
+		end
+	end
+end
+
+function levelface.update()
+	songPosition = levelsong:tell("seconds")
+	if songPosition > songOffset + beatTimer + (songCrochet / 8) then 
+		beatTimer = beatTimer + (songCrochet / 8)
+		lastBeat = lastBeat + 0.125
+	end
+	for i, k in ipairs(songBeats) do
+		for l in pairs(k) do
+			if lastBeat == k[tostring(l)]["timing"] then
+				print("Hit " .. k[tostring(l)]["buttons"] .. "!")
+			end
+		end
+	end
 end
 
 function levelface.draw()
@@ -124,12 +159,17 @@ function levelface.draw()
 	love.graphics.setColor(0.9, 0.8, 0.85, 1.0)
 	local tracker = {50, 400, 75, 550, 750, 550, 750, 400}
 	love.graphics.polygon('line', tracker)
-	songPosition = levelsong:tell("seconds")
 	love.graphics.print(
 			songPosition,
 			font,
 			10,
 			10
+			)
+	love.graphics.print(
+			lastBeat,
+			font,
+			412,
+			475
 			)
 end
 
@@ -173,6 +213,7 @@ function love.draw()
 			songlevel=button.songlevel
 			songBPM=button.songBPM
 			songOffset=button.songOffset
+			songBeats=button.songBeats
 			button.fn()
 		end
 		

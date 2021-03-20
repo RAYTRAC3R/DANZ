@@ -3,6 +3,7 @@
 		"songName": "Hibana",
 		"songWav": "songs/Hibana/Hibana.mp3",
 		"songBPM": 200,
-		"songOffset": 1.428
+		"songOffset": 3.328,
+		"beatmap": "songs/Hibana/beatmap.json"
 	 }
 ]

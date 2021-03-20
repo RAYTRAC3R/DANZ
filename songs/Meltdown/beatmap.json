@@ -1,0 +1,17 @@
+[
+	{"1": {
+		"timing": 1,
+		"buttons": "z",
+		"beatLength": 1
+	},
+	"2": {
+		"timing": 1.5,
+		"buttons": "x",
+		"beatLength": 0.5
+	},
+	"3": {
+		"timing": 1.75,
+		"buttons": "c",
+		"beatLength": 0.5
+	}}
+]

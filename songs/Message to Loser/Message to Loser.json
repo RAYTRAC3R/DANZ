@@ -3,6 +3,7 @@
 		"songName": "Message to Loser",
 		"songWav": "songs/Message to Loser/Message to Loser.mp3",
 		"songBPM": 170,
-		"songOffset": 0.045
+		"songOffset": 2.148,
+		"beatmap": "songs/Message to Loser/beatmap.json"
 	 }
 ]

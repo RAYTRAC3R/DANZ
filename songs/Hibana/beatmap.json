@@ -1,0 +1,47 @@
+[
+	{"1": {
+		"timing": 1,
+		"buttons": "x",
+		"beatLength": 1
+	},
+	"2": {
+		"timing": 1.75,
+		"buttons": "c",
+		"beatLength": 1
+	},
+	"3": {
+		"timing": 2.5,
+		"buttons": "x",
+		"beatLength": 1
+	},
+	"4": {
+		"timing": 3.25,
+		"buttons": "c",
+		"beatLength": 1
+	},
+	"5": {
+		"timing": 4,
+		"buttons": "x",
+		"beatLength": 1
+	},
+	"6": {
+		"timing": 4.75,
+		"buttons": "c",
+		"beatLength": 1
+	},
+	"7": {
+		"timing": 5.5,
+		"buttons": "x",
+		"beatLength": 1
+	},
+	"8": {
+		"timing": 6.25,
+		"buttons": "c",
+		"beatLength": 1
+	},
+	"9": {
+		"timing": 7,
+		"buttons": "x",
+		"beatLength": 1
+	}}
+]

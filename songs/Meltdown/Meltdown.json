@@ -3,6 +3,7 @@
 		"songName": "Meltdown",
 		"songWav": "songs/Meltdown/Meltdown.mp3",
 		"songBPM": 165,
-		"songOffset": 0.655
+		"songOffset": 0.655,
+		"beatmap": "songs/Meltdown/beatmap.json"
 	 }
 ]

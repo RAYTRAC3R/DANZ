@@ -1,0 +1,22 @@
+[
+	{"1": {
+		"timing": 1,
+		"buttons": "z",
+		"beatLength": 1
+	},
+	"2": {
+		"timing": 2,
+		"buttons": "x",
+		"beatLength": 0.5
+	},
+	"3": {
+		"timing": 2.5,
+		"buttons": "x",
+		"beatLength": 0.5
+	},
+	"4": {
+		"timing": 3,
+		"buttons": "z",
+		"beatLength": 1
+	}}
+]
