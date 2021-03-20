@@ -97,13 +97,17 @@ function danzsongs.enter()
 		end))
 end
 
+function levelface.enter()
+	levelsong = love.audio.newSource(songlevel, "stream")
+	love.audio.play(levelsong)
+end
+
 function levelface.draw()
 	buttons = {}
 	love.graphics.setColor(0.9, 0.8, 0.85, 1.0)
 	local tracker = {50, 400, 75, 550, 750, 550, 750, 400}
 	love.graphics.polygon('line', tracker)
 	levelsong = love.audio.newSource(songlevel, "stream")
-	love.audio.play(levelsong)
 	songPosition = levelsong:tell("seconds")
 	love.graphics.print(
 			songPosition,
