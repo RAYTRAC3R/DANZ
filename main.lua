@@ -18,7 +18,21 @@ function newButton(text, fn)
 	}
 end
 
-font = love.graphics.newFont(32)
+function newLevelButton(text, songlevel, songBPM, songOffset, fn)
+	return {
+		text = text,
+		songlevel = songlevel,
+		songBPM = songBPM,
+		songOffset = songOffset,
+		fn = fn,
+		
+		now = false,
+		last = false
+	}
+end
+
+
+font = love.graphics.newFont(28)
 
 function love.update(dt)
 end
@@ -75,18 +89,21 @@ function danzsongs.enter()
 			songlevel = l["songWav"]
 			songBPM = l["songBPM"]
 			songOffset = l["songOffset"]
+			table.insert(buttons, newLevelButton(
+				buttonTitle,
+				songlevel,
+				songBPM,
+				songOffset,
+				function()
+					print("Starting game")
+					love.audio.stop()
+					Gamestate.switch(levelface)
+					songlevel = songlevel
+					songBPM = songBPM
+					songCrochet = 60 / songBPM
+					songOffset = songOffset
+				end))
 		end
-		table.insert(buttons, newButton(
-			buttonTitle,
-			function()
-				print("Starting game")
-				love.audio.stop()
-				Gamestate.switch(levelface)
-				songlevel = songlevel
-				songBPM = songBPM
-				songCrochet = 60 / songBPM
-				songOffset = songOffset
-			end))
 	end
 
 	table.insert(buttons, newButton(
@@ -107,7 +124,6 @@ function levelface.draw()
 	love.graphics.setColor(0.9, 0.8, 0.85, 1.0)
 	local tracker = {50, 400, 75, 550, 750, 550, 750, 400}
 	love.graphics.polygon('line', tracker)
-	levelsong = love.audio.newSource(songlevel, "stream")
 	songPosition = levelsong:tell("seconds")
 	love.graphics.print(
 			songPosition,
@@ -115,6 +131,15 @@ function levelface.draw()
 			10,
 			10
 			)
+end
+
+function levelface:keyreleased(key)
+	if key == 'escape' then
+		love.audio.stop()
+		Gamestate.switch(danzsongs)
+	elseif key == 'a' then
+		print("A was pressed!")
+	end
 end
 
 function love.draw()
@@ -145,6 +170,9 @@ function love.draw()
 		
 		button.now = love.mouse.isDown(1)
 		if button.now and not button.last and hot then 
+			songlevel=button.songlevel
+			songBPM=button.songBPM
+			songOffset=button.songOffset
 			button.fn()
 		end
 		
