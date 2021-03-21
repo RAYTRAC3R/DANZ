@@ -1,6 +1,8 @@
 Gamestate = require "hump.gamestate"
 Levelsys = require "level"
 json = require "depend.json"
+puppeteer = require "puppeteer"
+tween = require "depend.tween"
 
 local menu = {} -- previously: Gamestate.new()
 local danzsongs = {}
@@ -153,6 +155,16 @@ function levelface.enter()
 	zbeatimg = love.graphics.newImage("imgs/zbeat.png")
 	xbeatimg = love.graphics.newImage("imgs/xbeat.png")
 	cbeatimg = love.graphics.newImage("imgs/cbeat.png")
+	instchar = buildChar("chars/test/test_char.json", 200, 250)
+	for i, inst in ipairs(instchar) do
+		if inst.partype == "root" then
+			rootsprite = love.graphics.newImage(inst.sprite)
+		elseif inst.partype == "head" then
+			headsprite = love.graphics.newImage(inst.sprite)
+		end
+	end
+	setAnim()
+	dt = love.timer.getDelta()
 end
 
 function levelface.update()
@@ -161,11 +173,23 @@ function levelface.update()
 		beatTimer = beatTimer + (songCrochet / 8)
 		lastBeat = lastBeat + 0.125
 	end
+	if animhead[1] <= 0 then
+		headtween1:update(-0.25)
+	elseif animhead[1] >= 0 then
+		headtween2:update(-0.25)
+	end
 end
 
 function levelface.draw()
 	buttons = {}
 	love.graphics.setColor(0.9, 0.8, 0.85, 1.0)
+	for i, inst in ipairs(instchar) do
+		if inst.partype == "root" then
+			love.graphics.draw(rootsprite, inst.partx, inst.party, 0, 0.75, 0.75, inst.originx, inst.originy)
+		elseif inst.partype == "head" then
+			love.graphics.draw(headsprite, inst.partx, inst.party, animhead[1], 0.75, 0.75, inst.originx, inst.originy)
+		end
+	end
 	local tracker = {50, 400, 75, 550, 750, 550, 750, 400}
 	love.graphics.polygon('line', tracker)
 	love.graphics.print(
@@ -189,7 +213,6 @@ function levelface.draw()
 				print("Z now!")
 			else
 				beat.ZactiveNow = false
-				print("No Z now.")
 			end
 		elseif beat.buttonkeys == "x" then
 			xcoord = 75 + ((beat.timing - lastBeat) * 325)
@@ -199,7 +222,6 @@ function levelface.draw()
 				print("X now!")
 			else
 				beat.XactiveNow = false
-				print("No X now.")
 			end
 		elseif beat.buttonkeys == "c" then
 			xcoord = 75 + ((beat.timing - lastBeat) * 325)
@@ -209,7 +231,6 @@ function levelface.draw()
 				print("C now!")
 			else
 				beat.CactiveNow = false
-				print("No C now.")
 			end
 		end
 	end
@@ -229,17 +250,43 @@ function levelface:keypressed(key)
 			print("Successfully hit Z!")
 			love.audio.play(hitsound)
 			beat.prevHit = true
+		elseif beat.ZactiveNow == true and key == "x" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
+			beat.prevHit = true
+		elseif beat.ZactiveNow == true and key == "c" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
+			beat.prevHit = true
 		end
 		if beat.XactiveNow == true and key == "x" and beat.prevHit == false then
 			score = score + 1
 			print("Successfully hit X!")
 			love.audio.play(hitsound)
 			beat.prevHit = true
+			headtween1:update(1.5)
+		elseif beat.XactiveNow == true and key == "z" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
+			beat.prevHit = true
+		elseif beat.XactiveNow == true and key == "c" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
+			beat.prevHit = true
 		end
 		if beat.CactiveNow == true and key == "c" and beat.prevHit == false then
 			score = score + 1
 			print("Successfully hit C!")
 			love.audio.play(hitsound)
+			beat.prevHit = true
+			headtween2:update(1.5)
+		elseif beat.CactiveNow == true and key == "z" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
+			beat.prevHit = true
+		elseif beat.CactiveNow == true and key == "x" and beat.prevHit == false then
+			score = score - 1
+			print("Wrong key!")
 			beat.prevHit = true
 		end
 	end

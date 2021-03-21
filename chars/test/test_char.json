@@ -1,0 +1,6 @@
+[
+	{
+	"root": {"sprite": "chars/test/testBody.png", "type": "root", "size": "0.75", "originx": "47", "originy": "95"},
+	"head": {"sprite": "chars/test/testHead.png", "type": "head", "size": "0.75", "offsetx": "0", "offsety": "-60", "originx": "95", "originy": "175"}
+	}
+]
